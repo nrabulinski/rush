@@ -212,7 +212,8 @@ impl Lexer {
                             };
 
                             if let Some(a) = action {
-                                let word = self.read_until(true, true, false, Box::new(|c| c == '}'))?;
+                                let word =
+                                    self.read_until(true, true, false, Box::new(|c| c == '}'))?;
                                 expandables.push(Brace(param, a, word));
                             } else {
                                 expandables.push(Var(param));
@@ -220,7 +221,12 @@ impl Lexer {
                         }
                         Some('(') => {
                             self.next_char();
-                            expandables.push(Sub(self.read_until(true, true, true, Box::new(|c| c == ')'))?));
+                            expandables.push(Sub(self.read_until(
+                                true,
+                                true,
+                                true,
+                                Box::new(|c| c == ')'),
+                            )?));
                         }
                         Some('$') => {
                             // '$$' command doesn't play nicely with the reading here,
@@ -237,7 +243,12 @@ impl Lexer {
                     // How often are backticks actually used for subshells?
                     // I really don't want to have to implement nested backtick subshells...
                     self.next_char();
-                    expandables.push(Sub(self.read_until(true, true, true, Box::new(|c| c == '`'))?));
+                    expandables.push(Sub(self.read_until(
+                        true,
+                        true,
+                        true,
+                        Box::new(|c| c == '`'),
+                    )?));
                 }
                 Some('~') => {
                     if !cur_word.is_empty() {

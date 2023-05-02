@@ -2,10 +2,10 @@ use crate::builtins;
 use crate::helpers::{Fd, Shell};
 use crate::parser::{Cmd, Simple};
 use os_pipe::{pipe, PipeReader, PipeWriter};
-use std::process::Command;
-use std::rc::Rc;
 use std::cell::RefCell;
 use std::io::Read;
+use std::process::Command;
+use std::rc::Rc;
 
 // This is useful to keep track of what each command does with its STDs
 #[derive(Debug)]
@@ -43,9 +43,7 @@ pub struct Runner {
 
 impl Runner {
     pub fn new(shell: Rc<RefCell<Shell>>) -> Runner {
-        Runner {
-            shell,
-        }
+        Runner { shell }
     }
 
     pub fn execute(&self, ast: Cmd, capture: bool) -> Option<String> {
@@ -161,4 +159,3 @@ impl Runner {
     }
 }
 // How do I test this module?
-

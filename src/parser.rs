@@ -5,6 +5,7 @@ use crate::lexer::{
     Expand::{self, *},
     Op,
 };
+use crate::runner::Runner;
 use nix::unistd::User;
 use os_pipe::pipe;
 use std::cell::RefCell;
@@ -14,7 +15,6 @@ use std::io::Write;
 use std::iter::Peekable;
 use std::process::exit;
 use std::rc::Rc;
-use crate::runner::Runner;
 
 #[derive(Debug, PartialEq)]
 pub enum Cmd {
@@ -84,18 +84,18 @@ impl Simple {
 }
 
 // The parser struct. Keeps track of current location in a peekable iter of tokens
-pub struct Parser<I> 
+pub struct Parser<I>
 where
-    I: Iterator<Item = Token>
+    I: Iterator<Item = Token>,
 {
     shell: Rc<RefCell<Shell>>,
     lexer: Peekable<I>,
 }
 
 impl<I> Parser<I>
-    where
-        I: Iterator<Item = Token>
-    {
+where
+    I: Iterator<Item = Token>,
+{
     pub fn new(lexer: I, shell: Rc<RefCell<Shell>>) -> Parser<I> {
         Parser {
             shell,
@@ -235,19 +235,14 @@ impl<I> Parser<I>
                     }
                 }
                 Var(s) => {
-                    phrase.push_str(
-                        &self.shell
-                            .borrow()
-                            .get_var(&s)
-                            .unwrap_or_default()
-                    );
+                    phrase.push_str(&self.shell.borrow().get_var(&s).unwrap_or_default());
                 }
                 Brace(key, action, word) => {
                     let val = self.shell.borrow().get_var(&key);
                     match action {
                         Action::UseDefault(null) => {
                             if let Some(s) = val {
-                                if s == "" && null {
+                                if s.is_empty() && null {
                                     phrase.push_str(&self.expand_word(word))
                                 } else {
                                     phrase.push_str(&s)
@@ -258,7 +253,7 @@ impl<I> Parser<I>
                         }
                         Action::AssignDefault(null) => {
                             if let Some(s) = val {
-                                if s == "" && null {
+                                if s.is_empty() && null {
                                     let expanded = self.expand_word(word);
                                     phrase.push_str(&expanded);
                                     self.shell.borrow_mut().set_var(key, expanded);
@@ -273,7 +268,7 @@ impl<I> Parser<I>
                         }
                         Action::IndicateError(null) => {
                             if let Some(s) = val {
-                                if s == "" && null {
+                                if s.is_empty() && null {
                                     let message = self.expand_word(word);
                                     if message.is_empty() {
                                         eprintln!("rush: {}: parameter null", key);
@@ -300,7 +295,7 @@ impl<I> Parser<I>
                         }
                         Action::UseAlternate(null) => {
                             if let Some(s) = val {
-                                if s != "" || !null {
+                                if !s.is_empty() || !null {
                                     phrase.push_str(&self.expand_word(word))
                                 }
                             }
@@ -315,7 +310,7 @@ impl<I> Parser<I>
                 Sub(e) => {
                     // FIXME: `$(ls something)`, commands with params don't work atm
                     // for some reason
-                    let mut parser = Parser::new(vec!(Word(e)).into_iter(), Rc::clone(&self.shell));
+                    let mut parser = Parser::new(vec![Word(e)].into_iter(), Rc::clone(&self.shell));
 
                     // This setup here allows me to do a surprisingly easy subshell.
                     // Though subshells typically seem to inherit everything I'm keeping in my
@@ -324,7 +319,9 @@ impl<I> Parser<I>
                         #[cfg(debug_assertions)] // Only include when not built with `--release` flag
                         println!("\u{001b}[33m{:#?}\u{001b}[0m", command);
 
-                        let mut output = Runner::new(Rc::clone(&parser.shell)).execute(command, true).unwrap();
+                        let mut output = Runner::new(Rc::clone(&parser.shell))
+                            .execute(command, true)
+                            .unwrap();
                         output = output.replace(char::is_whitespace, " ");
                         phrase.push_str(output.trim());
                     }

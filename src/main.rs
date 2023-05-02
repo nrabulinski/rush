@@ -1,9 +1,9 @@
+use rush::helpers::Shell;
 use rush::lexer::Lexer;
 use rush::parser::Parser;
 use rush::runner::Runner;
-use rush::helpers::Shell;
-use std::env;
 use std::cell::RefCell;
+use std::env;
 use std::rc::Rc;
 
 fn main() {
