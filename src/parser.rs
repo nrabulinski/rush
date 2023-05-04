@@ -221,16 +221,18 @@ where
                         phrase.push_str(&env::var("HOME").unwrap());
                         phrase.push_str(&s);
                     } else {
-                        let mut strings = s.splitn(1, '/');
-                        let name = strings.next().unwrap();
+                        let (name, rest) = s
+                            .split_once('/')
+                            .map_or((s.as_str(), None), |(name, rest)| (name, Some(rest)));
                         if let Some(user) = User::from_name(name).unwrap() {
                             phrase.push_str(user.dir.as_os_str().to_str().unwrap());
-                            if let Some(path) = strings.next() {
-                                phrase.push_str(path);
-                            }
                         } else {
                             phrase.push('~');
                             phrase.push_str(name);
+                        }
+                        if let Some(rest) = rest {
+                            phrase.push('/');
+                            phrase.push_str(rest);
                         }
                     }
                 }
