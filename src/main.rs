@@ -1,3 +1,5 @@
+mustang::can_run_this!();
+
 use rush::helpers::Shell;
 use rush::lexer::Lexer;
 use rush::parser::Parser;
