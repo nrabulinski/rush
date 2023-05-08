@@ -4,6 +4,7 @@ use crate::parser::{Cmd, Simple};
 use os_pipe::{pipe, PipeReader, PipeWriter};
 use std::cell::RefCell;
 use std::io::Read;
+use std::os::unix::process::CommandExt;
 use std::process::Command;
 use std::rc::Rc;
 
@@ -110,6 +111,16 @@ impl Runner {
             "exit" => builtins::exit(simple.args),
             "cd" => builtins::cd(simple.args),
             "set" => builtins::set(simple.args, &self.shell),
+            "exec" => {
+                if simple.args.is_empty() {
+                    eprintln!("rush: exec: Not enough arguments");
+                    false
+                } else {
+                    let err = Command::new(&simple.args[0]).args(&simple.args[1..]).exec();
+                    eprintln!("rush: exec: {}", err);
+                    false
+                }
+            }
             command => {
                 let mut cmd = Command::new(command);
                 cmd.args(&simple.args);
