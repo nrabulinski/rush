@@ -15,18 +15,38 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bef38d45163c2f1dde094a7dfd33ccf595c92905c8f8f4fdc18d06fb1037718a"
 
 [[package]]
+name = "bitflags"
+version = "2.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "327762f6e5a765692301e5bb513e0d9fef63be86bbc14528052b1cd3e6f03e07"
+
+[[package]]
 name = "c-gull"
 version = "0.8.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "99a4d93dc9646a9a29804d11c0f93e7450b392ad8d4e30e6acbd33487eb61364"
 dependencies = [
- "c-scape",
+ "c-scape 0.8.13",
  "errno",
  "libc",
  "log",
  "printf-compat",
- "rustix",
+ "rustix 0.37.19",
  "sync-resolve",
+ "tz-rs",
+]
+
+[[package]]
+name = "c-gull"
+version = "0.15.13"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "08158cb0a0829ee7c908536544b2b39cd1539b0b22c3ddeb8d4b40a1ef2bb4f1"
+dependencies = [
+ "c-scape 0.15.13",
+ "errno",
+ "libc",
+ "printf-compat",
+ "rustix 0.38.21",
  "tz-rs",
 ]
 
@@ -40,13 +60,35 @@ dependencies = [
  "libc",
  "libm",
  "log",
- "memoffset",
- "origin",
+ "memoffset 0.8.0",
+ "origin 0.8.13",
  "rand",
  "rand_core",
  "rand_pcg",
  "realpath-ext",
- "rustix",
+ "rustix 0.37.19",
+]
+
+[[package]]
+name = "c-scape"
+version = "0.15.13"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ff425aea074f3a5fdee3f0e2c5e5a6e9239b95762c060dfbda0449b63c0a70fa"
+dependencies = [
+ "errno",
+ "libc",
+ "libm",
+ "memoffset 0.9.0",
+ "origin 0.14.0",
+ "rand",
+ "rand_core",
+ "rand_pcg",
+ "realpath-ext",
+ "rustix 0.38.21",
+ "rustix-dlmalloc",
+ "rustix-futex-sync",
+ "rustix-openpty",
+ "unwinding 0.2.0",
 ]
 
 [[package]]
@@ -106,23 +148,21 @@ checksum = "7fcaabb2fef8c910e7f4c7ce9f67a1283a1715879a7c230ca9d6d1ae31f16d91"
 
 [[package]]
 name = "errno"
-version = "0.3.1"
+version = "0.3.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4bcfec3a70f97c962c307b2d2c56e358cf1d00b558d74262b5f929ee8cc7e73a"
+checksum = "ac3e13f66a2f95e32a39eaa81f6b95d42878ca0e1db0c7543723dfe12557e860"
 dependencies = [
- "errno-dragonfly",
  "libc",
  "windows-sys",
 ]
 
 [[package]]
-name = "errno-dragonfly"
-version = "0.1.2"
+name = "eyra"
+version = "0.16.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "aa68f1b12764fab894d2755d2518754e71b4fd80ecfb822714a1206c2aab39bf"
+checksum = "70f0bb9a335ad4906fbae0045e458377b0080ae0eeedced1b216265424f6c36b"
 dependencies = [
- "cc",
- "libc",
+ "c-gull 0.15.13",
 ]
 
 [[package]]
@@ -187,9 +227,9 @@ checksum = "453ad9f582a441959e5f0d088b02ce04cfe8d51a8eaf077f12ac6d3e94164ca6"
 
 [[package]]
 name = "libc"
-version = "0.2.142"
+version = "0.2.149"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6a987beff54b60ffa6d51982e1aa1146bc42f19bd26be28b0586f252fccf5317"
+checksum = "a08173bc88b7955d1b3145aa561539096c421ac8debde8cbc3612ec635fee29b"
 
 [[package]]
 name = "libm"
@@ -204,10 +244,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ece97ea872ece730aed82664c424eb4c8291e1ff2480247ccf7409044bc6479f"
 
 [[package]]
-name = "lock_api"
-version = "0.4.9"
+name = "linux-raw-sys"
+version = "0.4.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "435011366fe56583b16cf956f9df0095b405b82d76425bc8981c0e22e60ec4df"
+checksum = "da2479e8c062e40bf0066ffa0bc823de0a9368974af99c9f6df941d2c231e03f"
+
+[[package]]
+name = "lock_api"
+version = "0.4.11"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3c168f8615b12bc01f9c17e2eb0cc07dcae1940121185446edc3744920e8ef45"
 dependencies = [
  "autocfg",
  "scopeguard",
@@ -244,15 +290,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "memoffset"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5a634b1c61a95585bd15607c6ab0c4e5b226e695ff2800ba0cdccddf208c406c"
+dependencies = [
+ "autocfg",
+]
+
+[[package]]
 name = "mustang"
 version = "0.8.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e0c10e8df8836e677762c806c00194c756bab08566b3a730094b0917fea660f7"
 dependencies = [
- "c-gull",
+ "c-gull 0.8.13",
  "dlmalloc",
- "origin",
- "unwinding",
+ "origin 0.8.13",
+ "unwinding 0.1.6",
 ]
 
 [[package]]
@@ -261,7 +316,7 @@ version = "0.18.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "83450fe6a6142ddd95fb064b746083fc4ef1705fe81f64a64e1d4b39f54a1055"
 dependencies = [
- "bitflags",
+ "bitflags 1.3.2",
  "cc",
  "cfg-if 0.1.10",
  "libc",
@@ -279,12 +334,26 @@ version = "0.8.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f3a06d5fcfd4d45cf3dc0257c248f3d5872e479fb13bf1308ebad9da84b707ae"
 dependencies = [
- "bitflags",
+ "bitflags 1.3.2",
  "libc",
- "linux-raw-sys",
+ "linux-raw-sys 0.3.7",
  "lock_api",
- "memoffset",
- "rustix",
+ "memoffset 0.8.0",
+ "rustix 0.37.19",
+]
+
+[[package]]
+name = "origin"
+version = "0.14.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c5ec3dcf976d221ecd72070fc76a8a8bc7de6cef95559b7be77579697408c5e8"
+dependencies = [
+ "bitflags 2.4.1",
+ "linux-raw-sys 0.4.10",
+ "memoffset 0.9.0",
+ "rustix 0.38.21",
+ "rustix-futex-sync",
+ "unwinding 0.2.0",
 ]
 
 [[package]]
@@ -309,7 +378,7 @@ version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3b002af28ffe3d3d67202ae717810a28125a494d5396debc43de01ee136ac404"
 dependencies = [
- "bitflags",
+ "bitflags 1.3.2",
  "cstr_core",
  "cty",
  "itertools",
@@ -360,7 +429,7 @@ version = "0.1.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "692f72862a0d532b44a0f4965fb10f17e7659eaedf24d2ce3c989ca778bd092f"
 dependencies = [
- "bitflags",
+ "bitflags 1.3.2",
  "errno",
  "libc",
 ]
@@ -369,6 +438,7 @@ dependencies = [
 name = "rush"
 version = "0.1.0"
 dependencies = [
+ "eyra",
  "mustang",
  "nix",
  "os_pipe",
@@ -380,14 +450,60 @@ version = "0.37.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "acf8729d8542766f1b2cf77eb034d52f40d375bb8b615d0b147089946e16613d"
 dependencies = [
- "bitflags",
+ "bitflags 1.3.2",
  "errno",
  "io-lifetimes",
  "itoa",
  "libc",
- "linux-raw-sys",
+ "linux-raw-sys 0.3.7",
  "once_cell",
  "windows-sys",
+]
+
+[[package]]
+name = "rustix"
+version = "0.38.21"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2b426b0506e5d50a7d8dafcf2e81471400deb602392c7dd110815afb4eaf02a3"
+dependencies = [
+ "bitflags 2.4.1",
+ "errno",
+ "itoa",
+ "libc",
+ "linux-raw-sys 0.4.10",
+ "once_cell",
+ "windows-sys",
+]
+
+[[package]]
+name = "rustix-dlmalloc"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "730c0a5fbe9885450abcfca57da8c5d5a886492d01aa1a78b782fc5ddb2c0931"
+dependencies = [
+ "rustix 0.38.21",
+ "rustix-futex-sync",
+]
+
+[[package]]
+name = "rustix-futex-sync"
+version = "0.1.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bebec5b686394f118236986b64350c06de4504a4dbe32f4e2e96c9f8adc15390"
+dependencies = [
+ "lock_api",
+ "rustix 0.38.21",
+]
+
+[[package]]
+name = "rustix-openpty"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a25c3aad9fc1424eb82c88087789a7d938e1829724f3e4043163baf0d13cfc12"
+dependencies = [
+ "errno",
+ "libc",
+ "rustix 0.38.21",
 ]
 
 [[package]]
@@ -451,6 +567,16 @@ name = "unwinding"
 version = "0.1.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d5145b2053e3c94447eff8fd715c4ec6fde78a726da864e357125f6f71f74880"
+dependencies = [
+ "gimli",
+ "libc",
+]
+
+[[package]]
+name = "unwinding"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4ee215fc0991fb587275819562685254302112d0b7c8d25e635655526c0ecdc6"
 dependencies = [
  "gimli",
  "libc",
