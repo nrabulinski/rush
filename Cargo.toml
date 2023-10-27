@@ -10,6 +10,7 @@ edition = "2018"
 mustang = "0.8.4"
 os_pipe = "0.9.2"
 nix = "0.18.0"
+std = { version = "0.16.2", package = "eyra" }
 
 [profile.release-small]
 inherits = "release"
